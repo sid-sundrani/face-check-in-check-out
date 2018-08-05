@@ -92,7 +92,7 @@ def classify_face_video(frame, dets, face_width_thresh, svc, encoder):
 
                 # adding persons name to the frame
                 frame_out = putText(frame_out, str(identity),
-                                    (d.left(), d.bottom() - 5),
+                                    (d.left(), d.bottom() + 15),
                                     font,
                                     fontScale,
                                     fontColor,
