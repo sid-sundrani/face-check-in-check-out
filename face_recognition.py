@@ -13,6 +13,7 @@ from sklearn.externals import joblib
 
 # loading models required for face detection
 sp = shape_predictor('models/5_landmarks.dat')
+# pre trained face embedding model by dlib
 face_rec_model_path = 'models/dlib_face_recognition_resnet_model_v1.dat'
 facerec = face_recognition_model_v1(face_rec_model_path)
 face_cascade = CascadeClassifier('models/haarcascade_frontalface_alt.xml')
@@ -24,6 +25,7 @@ fontColor = (255, 255, 255)
 lineType = 2
 
 
+# returns a list of bounding boxes of the detected faces
 def faces_in_frame(frame):
 
     gray_frame = cvtColor(frame, COLOR_BGR2GRAY)
@@ -42,6 +44,8 @@ def faces_in_frame(frame):
     return faces_det_bb
 
 
+# returns identities of persons in frame, the embedding of their faces, times at which they were recognized,
+# and a frame with bounded box annotations
 def classify_face_video(frame, dets, face_width_thresh, svc, encoder):
     embed_database = np.loadtxt('embeddings/embed_updates.csv', delimiter=',')
     labels_update = np.loadtxt('embeddings/names_updates.csv', dtype=str, delimiter=',')
@@ -101,29 +105,25 @@ def classify_face_video(frame, dets, face_width_thresh, svc, encoder):
     return frame_out, face_descriptors, identities, time_seen
 
 
+# trains a svm on the embeddings
 def train_svm(embed_filename, targets_filename):
 
     # load embedding vectors if you want
     embedded = np.loadtxt(embed_filename, delimiter=",")
     targets = np.loadtxt(targets_filename, delimiter=",", dtype=str)
-
-    print(embedded.shape)
-    print(targets.shape)
-
+    # encode target variables
     encoder = LabelEncoder()
     encoder.fit(targets)
 
     # Numerical encoding of identities
     y = encoder.transform(targets)
-
-    # Index of training images
+    # training set
     X_train = embedded
-
-    # Index of testing images
+    # targets
     y_train = y
-
     svc = LinearSVC()
     svc.fit(X_train, y_train)
+    # saving the svm model
     joblib.dump(svc, 'models/svm_model.pkl')
 
 

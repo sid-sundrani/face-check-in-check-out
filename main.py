@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import json
 from dateutil.parser import *
 
-# importing classification models
+# importing scikit-learn svm
 svc = joblib.load('models/svm_model.pkl')
 encoder = joblib.load('models/name_encoder.pkl')
 
@@ -32,8 +32,10 @@ np.warnings.filterwarnings('ignore')
 # saving execution times
 face_detection_times = []
 processing_times = []
-check_in_details = {}
+all_check_in_times = []
+all_recognized_faces = []
 
+check_in_details = {}
 
 start1 = time.time()
 
@@ -53,41 +55,33 @@ for frame_no in frame_intervals:
     face_width = w/4
     frame_out = frame
     # time persons are seen/classified
-    time_seen = []
+    times_seen = []
+    identities = []
     # if the frame contains faces classify the faces in the frame
     if np.array(faces_detected).size > 0:
-        frame_out, face_descriptors, identities, time_seen = face_recognition.classify_face_video(frame, faces_detected,
-                                                                                                  face_width, svc,encoder)
-    check_in_out = {'check-in': [], 'check-out': []}
-
-    if len(time_seen) > 0:
-        for i in range(len(time_seen)):
-            if identities[i] in check_in_details:
-
-                # parse converts string to datetime
-                if datetime.now() - check_in_details[identities[i]]['check-in'][-1] > timedelta(seconds=10):
-                    print(1)
-                    print(check_in_details)
-                    time_seen[i]
-                    check_in_details[identities[i]] = check_in_out['check-in'].append(time_seen[i])
-            else:
-                print(2)
-                check_in_details[identities[i]] = check_in_out
-                check_in_details[identities[i]]['check-in'].append(time_seen[i])
-
-        json_file = json.dumps(check_in_details, indent=4, sort_keys=True, default=str)
-        f = open("check_in_times.json", "w")
-        f.write(json_file)
-        f.close()
-
+        frame_out, face_descriptors, identities, times_seen = face_recognition.classify_face_video(frame, faces_detected,
+                                                                                                   face_width, svc,
+                                                                                                   encoder)
+    for name, last_seen in zip(identities, times_seen):
+        if name in check_in_details:
+            if datetime.now() - check_in_details[name][-1] > timedelta(seconds=0):
+                check_in_details[name].append(last_seen)
+        else:
+            check_in_details[name] = []
+            check_in_details[name].append(last_seen)
+    # writing frame
     video_out.write(frame_out)
 
 end1 = time.time()
 
 print('total time taken ', end1 - start1)
 print('face detection time', np.mean(np.array(face_detection_times)))
-
+# destroying running processes
 video.release()
 video_out.release()
 cv2.destroyAllWindows()
 
+json_file = json.dumps(check_in_details, indent=4, sort_keys=True, default=str)
+f = open("check_in_times.json", "w")
+f.write(json_file)
+f.close()
