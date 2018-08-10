@@ -13,7 +13,7 @@ svc = joblib.load('models/svm_model.pkl')
 encoder = joblib.load('models/name_encoder.pkl')
 
 # Setting up open CV video object
-video = cv2.VideoCapture('videos/test7.mp4')
+video = cv2.VideoCapture('videos/test8.mp4')
 fps = video.get(cv2.CAP_PROP_FPS)
 # the size of the frame will be downscaled to a fourth of its size
 w = int(video.get(cv2.CAP_PROP_FRAME_WIDTH) / 4)
@@ -21,7 +21,7 @@ h = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT) / 4)
 # video encoding
 video_encoding = cv2.VideoWriter_fourcc(*'DIVX')
 # object to write processed frames to video file
-video_out = cv2.VideoWriter('video_output/output7.mp4', video_encoding, 15.0, (int(w), int(h)), isColor=True)
+video_out = cv2.VideoWriter('video_output/output8.mp4', video_encoding, 15.0, (int(w), int(h)), isColor=True)
 # total number of frames in video
 total_frames = video.get(7)
 # will sample the video at half the current frame rate
