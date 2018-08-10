@@ -27,7 +27,7 @@ total_frames = video.get(7)
 # will sample the video at half the current frame rate
 frame_intervals = np.arange(1, total_frames, 4)
 print('new frame rate', fps / 4)
-
+# some unnecessary warnings
 np.warnings.filterwarnings('ignore')
 # saving execution times
 face_detection_times = []
