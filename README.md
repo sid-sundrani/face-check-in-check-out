@@ -6,6 +6,6 @@ SVM hyperplane ( d > -0.1). Continual learning is enabled. This implies more tha
 is classified with a very high confidence metric (d > 1.5) his embedding is added to the database and SVM is re trained. 
 
 files: 
-main.py classfies and records time a person was seen inside, from camera #1. main_2.py classfies and records time a person was seen outside from camera #2. The video feeds fed in this project were just two pre recorded but can easiliy be extended to live capture. Additionally, this process is fast enough to run live. 
+main.py classfies and records time a person was seen inside, from camera #1. main_2.py classfies and records time a person was seen outside from camera #2. The video feeds fed in this project were just two pre recorded but can easiliy be extended to live capture. Additionally, this process is fast enough to run live at 480p. 
 
 
