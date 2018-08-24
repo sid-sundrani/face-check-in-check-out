@@ -6,7 +6,7 @@ SVM hyperplane ( d > -0.1). Continual learning is enabled. This implies that mor
 is classified with a very high confidence metric (d > 0.7) his embedding is added to the database and SVM is re trained. 
 Plot below shows the prediction accuracy vs distance threshold d (from hyperplane)and ratio of the number of photos classified vs threshold. As d increases, the ratio of the number of photos classified decreases and accuracy increases.
 
-![alt text](https://github.com/sid-sundrani/face-check-in-check-out/blob/master/models/Snip20180805_1.png)
+![alt text](https://github.com/sid-sundrani/face-check-in-check-out/blob/master/models/Snip20180805_1.png= =250x250)
 
 
 files: 
